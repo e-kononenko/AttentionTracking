@@ -1,2 +1,3 @@
 # InterestTracking
-Understanding what items in your SwiftUI list are interesting to users
+
+Simple algorithm to understand, what items in SwiftUI List are interesting to users. 
