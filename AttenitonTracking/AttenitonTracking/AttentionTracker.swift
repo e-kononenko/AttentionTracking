@@ -14,7 +14,7 @@ final class AttentionTracker {
         let date: Date
     }
 
-    private let queue = DispatchQueue.global(qos: .utility)
+    private let queue = DispatchQueue(label: "attention tracking")  // serial queue where we will process our data
     private let throttleTime = 0.5
     private let collectTime = 3.0
     private let batchSubject: PassthroughSubject<Batch, Never> = .init()
