@@ -35,9 +35,8 @@ final class AttentionTracker {
     }
 
     // not a pure function, as it comes with a side effect, but everything is under control :)
-    private func processNewBatch(_ batch: Batch, helperDict: inout HelperDict) -> [Output] {
-        var outputs: [Output] = .init()
-
+    private func processNewBatch(_ batch: Batch, outputs: inout [Output], helperDict: inout HelperDict) {
+        print("We are on thread \(Thread.current)")
         // check ids that disappeared from the helper dict
         let disappearedIds = helperDict.keys.filter {
             !batch.ids.contains($0)
@@ -69,8 +68,6 @@ final class AttentionTracker {
                 helperDict[id] = (batch.date, batch.date)
             }
         }
-
-        return outputs
     }
 
     private typealias HelperDict = [Int: (Date, Date)]  // dates represent when we met this id first and last time
@@ -86,7 +83,13 @@ final class AttentionTracker {
                 latest: true
             )
             .compactMap { [weak self] batch in
-                self?.processNewBatch(batch, helperDict: &helperDict)
+                var outputs: [Output] = .init()
+                self?.processNewBatch(
+                    batch,
+                    outputs: &outputs,
+                    helperDict: &helperDict
+                )
+                return outputs
             }
             .collect(.byTime(queue, .seconds(collectTime))) // collecting outputs to send them by batching
             .map { outputs in
