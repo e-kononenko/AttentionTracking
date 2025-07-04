@@ -21,11 +21,11 @@ final class AttentionTracker {
 
     private enum Constants {
         static let throttleTime = 0.5
-        static let collectTime = 3.0
-        static let minimumViewingTime = 5.0
+        static let collectTime = 6.0
+        static let minimumViewingTime = 2.0
     }
 
-    private typealias HelperDict = [Int: (Date, Date)]  // dates that represent when we met this id first and last time
+    private typealias HelperDict = [Int: Date]  // id and when it appeared first time
 
     private let queue = DispatchQueue(label: "attention tracking")  // serial queue where we will process our data
     private let batchSubject: PassthroughSubject<Batch, Never> = .init()
@@ -56,7 +56,7 @@ final class AttentionTracker {
                 )
                 return outputs
             }
-            .collect(.byTime(queue, .seconds(Constants.collectTime))) // collecting outputs to send them by batching
+            .collect(.byTime(queue, .seconds(Constants.collectTime))) // collecting outputs to send them in batches
             .compactMap { outputs in
                 // since we receive array of arrays after collecting, we flatten it
                 let flattenedOutputs = outputs.flatMap {
@@ -77,12 +77,12 @@ final class AttentionTracker {
 
         // if we found something that disappeared - create an Output and remove from helperDict
         for disappearedId in disappearedIds {
-            guard let dates = helperDict[disappearedId] else {
+            guard let dateOfAppearance = helperDict[disappearedId] else {
                 continue
             }
 
             //calculate viewingTime as the difference between first and last dates
-            let viewingTime = dates.1.timeIntervalSince(dates.0)
+            let viewingTime = batch.date.timeIntervalSince(dateOfAppearance)
             let outputItem: Output = .init(
                 id: disappearedId,
                 viewingTime: viewingTime
@@ -91,25 +91,34 @@ final class AttentionTracker {
             helperDict.removeValue(forKey: disappearedId)
         }
 
-        // now processing new ids: see what's new, and what we have already met
+        // now processing batch ids and see what's new
         for id in batch.ids {
-            if let dates = helperDict[id] {
-                // we met this id before, and we are meeting it now - we should update last met date
-                helperDict[id] = (dates.0, batch.date)
-            } else {
-                // if it is a new id, then just put equal dates to the dictionary
-                helperDict[id] = (batch.date, batch.date)
+            //if we haven't met this id before, we add it to helperDict
+            if helperDict[id] == nil {
+                helperDict[id] = batch.date
             }
         }
     }
 
     // MARK: - Internal
-    func trackIds(
-        _ ids: [Int],
-        date: Date = Date()
+    func trackIdFrames(
+        _ idFrames: [Int: CGRect],
+        parentBounds: CGRect,
+        date: Date = .init()
     ) {
-        if !ids.isEmpty {
-            let batch = Batch(ids: Set(ids), date: date)
+        // check only ids that are visible within their parent's bounds
+        let visibleIds = idFrames
+            .compactMap { (id, frame) in
+                let isVisible = VisibilityHelper.isFrameVisible(
+                    frame,
+                    inParentBounds: parentBounds
+                )
+
+                return isVisible ? id : nil
+            }
+
+        if !visibleIds.isEmpty {
+            let batch = Batch(ids: Set(visibleIds), date: date)
             batchSubject.send(batch)
         }
     }
