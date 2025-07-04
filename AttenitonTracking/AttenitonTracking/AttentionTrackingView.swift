@@ -25,8 +25,11 @@ struct ChildViewFramePreferenceKey: PreferenceKey {
 }
 
 struct AttentionTrackingView: View {
-    @State var items: [Item] = (0...100).map { Item(id: $0) }
-    @State var attentionTracker: AttentionTracker = .init()
+    @State private var items: [Item] = (0...100).map { Item(id: $0) }
+    @State private var parentBounds: CGRect = .zero
+
+    @State private var attentionTracker: AttentionTracker = .init()
+    @State private var attentionOutputs: [AttentionTracker.Output] = .init()
 
     var body: some View {
         GeometryReader { parentGeometry in
@@ -38,11 +41,12 @@ struct AttentionTrackingView: View {
             .listStyle(.plain)
             .listRowSpacing(20)
             .ignoresSafeArea()
+            .onAppear(perform: {
+                parentBounds = parentGeometry.frame(in: .global)
+            })
             .onPreferenceChange(
                 ChildViewFramePreferenceKey.self,
                 perform: { childFrames in
-                    let parentBounds = parentGeometry.frame(in: .global)
-
                     let visibleIds = childFrames
                         .compactMap { (id, frame) -> Int? in
                             return frame.intersects(parentBounds) ? id : nil
@@ -50,9 +54,21 @@ struct AttentionTrackingView: View {
 
                     attentionTracker.trackIds(visibleIds)
                 })
-            .onReceive(attentionTracker.outputPublisher, perform: { output in
-//                print("Output: \(output)")
+            .onReceive(attentionTracker.outputPublisher, perform: { outputs in
+                self.attentionOutputs = outputs
             })
+            .overlay {
+                let outputText = attentionOutputs
+                    .map { output in
+                        let viewingTimeString = String(format: "%.2f", output.viewingTime)
+
+                        return "id \(output.id): \(viewingTimeString)"
+                    }
+                    .joined(separator: "\n")
+                let resultText = "Result:\n\(outputText)"
+
+                ResultView(resultText: resultText)
+            }
         }
         .ignoresSafeArea()
     }
@@ -97,6 +113,25 @@ struct ItemView: View {
                         )
                 }
             }
+    }
+}
+
+struct ResultView: View {
+    let resultText: String
+    var body: some View {
+        VStack {
+            ZStack(alignment: .topLeading) {
+                Color.black.opacity(0.5)
+                    .frame(height: 200)
+
+                Text(resultText)
+                    .font(.title2)
+                    .foregroundColor(.white)
+                    .padding(.top, 50)
+                    .padding(.leading, 20)
+            }
+            Spacer()
+        }
     }
 }
 
