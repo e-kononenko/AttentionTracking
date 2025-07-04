@@ -57,7 +57,6 @@ final class AttentionTracker {
                 // since we receive array of arrays after collecting, we flatten it
                 outputs.flatMap { $0 }
             }
-            .receive(on: DispatchQueue.main)
             .subscribe(outputSubject)   // send the result into outputSubject
             .store(in: &cancellables)
     }
@@ -108,6 +107,8 @@ final class AttentionTracker {
     }
 
     var outputPublisher: AnyPublisher<[Output], Never> {
-        outputSubject.eraseToAnyPublisher()
+        outputSubject
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
 }
