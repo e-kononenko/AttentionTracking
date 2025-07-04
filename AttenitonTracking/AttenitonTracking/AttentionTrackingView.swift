@@ -71,6 +71,9 @@ struct AttentionTrackingView: View {
 
                     attentionTracker.trackIds(visibleIds)
                 })
+            .onReceive(attentionTracker.outputPublisher, perform: { output in
+                print("Output: \(output)")
+            })
             .listRowSpacing(20)
         }
         .ignoresSafeArea()
