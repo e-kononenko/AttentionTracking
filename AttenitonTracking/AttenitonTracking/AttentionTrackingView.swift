@@ -53,20 +53,7 @@ struct AttentionTrackingView: View {
         GeometryReader { parentGeometry in
             List {
                 ForEach(items) { item in
-                    Text("Item \(item.id)")
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 400)
-                        .background(Color.mint)
-                        .listRowInsets(.init())
-                        .overlay {
-                            GeometryReader { childGeometry in
-                                Color.clear
-                                    .preference(
-                                        key: ChildViewFramePreferenceKey.self,
-                                        value: [item.id: childGeometry.frame(in: .global)]
-                                    )
-                            }
-                        }
+                    ItemView(item: item)
                 }
             }
             .listStyle(.plain)
@@ -87,6 +74,26 @@ struct AttentionTrackingView: View {
             .listRowSpacing(20)
         }
         .ignoresSafeArea()
+    }
+}
+
+struct ItemView: View {
+    let item: Item
+    var body: some View {
+        Text("Item \(item.id)")
+            .frame(maxWidth: .infinity)
+            .frame(height: 400)
+            .background(Color.mint)
+            .listRowInsets(.init())
+            .overlay {
+                GeometryReader { childGeometry in
+                    Color.clear
+                        .preference(
+                            key: ChildViewFramePreferenceKey.self,
+                            value: [item.id: childGeometry.frame(in: .global)]
+                        )
+                }
+            }
     }
 }
 
