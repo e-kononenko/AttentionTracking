@@ -79,6 +79,12 @@ final class AttentionTracker {
         var helperDict: HelperDict = .init()
 
         batchSubject
+        // slowing down to not have too many values
+            .throttle(
+                for: .seconds(throttleTime),
+                scheduler: queue,
+                latest: true
+            )
             .compactMap { [weak self] batch in
                 self?.processNewBatch(batch, helperDict: &helperDict)
             }
@@ -87,6 +93,7 @@ final class AttentionTracker {
                 // since we receive array of arrays after collecting, we flatten it
                 outputs.flatMap { $0 }
             }
+            .receive(on: DispatchQueue.main)
             .subscribe(outputSubject)   // send the result into outputSubject
             .store(in: &cancellables)
     }
