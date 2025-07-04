@@ -14,6 +14,11 @@ final class AttentionTracker {
         let date: Date
     }
 
+    struct Output {
+        let id: Int
+        let viewingTime: TimeInterval // how long the id was visible
+    }
+
     private let queue = DispatchQueue(label: "attention tracking")  // serial queue where we will process our data
     private let throttleTime = 0.5
     private let collectTime = 3.0
@@ -29,12 +34,6 @@ final class AttentionTracker {
         setupSubscriptions()
     }
 
-    struct Output {
-        let id: Int
-        let viewingTime: TimeInterval // how long the id was viewed before disappear
-    }
-
-    // not a pure function, as it comes with a side effect, but everything is under control :)
     private func processNewBatch(_ batch: Batch, outputs: inout [Output], helperDict: inout HelperDict) {
         print("We are on thread \(Thread.current)")
         // check ids that disappeared from the helper dict
