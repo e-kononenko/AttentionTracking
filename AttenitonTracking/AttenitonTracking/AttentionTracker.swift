@@ -9,15 +9,17 @@ import Combine
 import Foundation
 
 final class AttentionTracker {
+    struct Output {
+        let id: Int
+        let viewingTime: TimeInterval // how long the id was visible
+    }
+
     private struct Batch {
         let ids: Set<Int>
         let date: Date
     }
 
-    struct Output {
-        let id: Int
-        let viewingTime: TimeInterval // how long the id was visible
-    }
+    private typealias HelperDict = [Int: (Date, Date)]  // dates that represent when we met this id first and last time
 
     private let queue = DispatchQueue(label: "attention tracking")  // serial queue where we will process our data
     private let throttleTime = 0.5
@@ -68,8 +70,6 @@ final class AttentionTracker {
             }
         }
     }
-
-    private typealias HelperDict = [Int: (Date, Date)]  // dates represent when we met this id first and last time
 
     private func setupSubscriptions() {
         var helperDict: HelperDict = .init()
