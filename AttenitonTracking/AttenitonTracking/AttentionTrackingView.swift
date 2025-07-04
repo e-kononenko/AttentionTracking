@@ -24,27 +24,6 @@ struct ChildViewFramePreferenceKey: PreferenceKey {
     }
 }
 
-/*
-struct ItemView: View {
-    let items: [Item] = (0..<100).map { Item(id: $0) }
-
-    var body: some View {
-        List {
-            ForEach(items) { item in
-                Text("Item \(item.id)")
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 400)
-                    .background(Color.mint)
-                    .listRowInsets(.init())
-            }
-        }
-        .listStyle(.plain)
-        .listRowSpacing(20)
-        .ignoresSafeArea()
-    }
-}
-*/
-
 struct AttentionTrackingView: View {
     @State var items: [Item] = (0...100).map { Item(id: $0) }
     @State var attentionTracker: AttentionTracker = .init()
@@ -72,13 +51,34 @@ struct AttentionTrackingView: View {
                     attentionTracker.trackIds(visibleIds)
                 })
             .onReceive(attentionTracker.outputPublisher, perform: { output in
-                print("Output: \(output)")
+//                print("Output: \(output)")
             })
-            .listRowSpacing(20)
         }
         .ignoresSafeArea()
     }
 }
+
+/*
+struct ItemView: View {
+    let items: [Item] = (0..<100).map { Item(id: $0) }
+
+    var body: some View {
+        List {
+            ForEach(items) { item in
+                Text("Item \(item.id)")
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 400)
+                    .background(Color.mint)
+                    .listRowInsets(.init())
+            }
+        }
+        .listStyle(.plain)
+        .listRowSpacing(20)
+        .ignoresSafeArea()
+    }
+}
+*/
+
 
 struct ItemView: View {
     let item: Item

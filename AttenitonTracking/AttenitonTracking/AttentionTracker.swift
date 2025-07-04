@@ -28,16 +28,41 @@ final class AttentionTracker {
     private let outputSubject: PassthroughSubject<[Output], Never> = .init()
     private var cancellables: Set<AnyCancellable> = .init()
 
-    var outputPublisher: AnyPublisher<[Output], Never> {
-        outputSubject.eraseToAnyPublisher()
-    }
-
     init() {
         setupSubscriptions()
     }
 
+    // MARK: - Private
+    private func setupSubscriptions() {
+        var helperDict: HelperDict = .init()
+
+        batchSubject
+        // slowing down to not have too many values
+            .throttle(
+                for: .seconds(throttleTime),
+                scheduler: queue,
+                latest: true
+            )
+            .compactMap { [weak self] batch in
+                var outputs: [Output] = .init()
+                self?.processNewBatch(
+                    batch,
+                    outputs: &outputs,
+                    helperDict: &helperDict
+                )
+                return outputs
+            }
+            .collect(.byTime(queue, .seconds(collectTime))) // collecting outputs to send them by batching
+            .map { outputs in
+                // since we receive array of arrays after collecting, we flatten it
+                outputs.flatMap { $0 }
+            }
+            .receive(on: DispatchQueue.main)
+            .subscribe(outputSubject)   // send the result into outputSubject
+            .store(in: &cancellables)
+    }
+
     private func processNewBatch(_ batch: Batch, outputs: inout [Output], helperDict: inout HelperDict) {
-        print("We are on thread \(Thread.current)")
         // check ids that disappeared from the helper dict
         let disappearedIds = helperDict.keys.filter {
             !batch.ids.contains($0)
@@ -71,35 +96,7 @@ final class AttentionTracker {
         }
     }
 
-    private func setupSubscriptions() {
-        var helperDict: HelperDict = .init()
-
-        batchSubject
-        // slowing down to not have too many values
-            .throttle(
-                for: .seconds(throttleTime),
-                scheduler: queue,
-                latest: true
-            )
-            .compactMap { [weak self] batch in
-                var outputs: [Output] = .init()
-                self?.processNewBatch(
-                    batch,
-                    outputs: &outputs,
-                    helperDict: &helperDict
-                )
-                return outputs
-            }
-            .collect(.byTime(queue, .seconds(collectTime))) // collecting outputs to send them by batching
-            .map { outputs in
-                // since we receive array of arrays after collecting, we flatten it
-                outputs.flatMap { $0 }
-            }
-            .receive(on: DispatchQueue.main)
-            .subscribe(outputSubject)   // send the result into outputSubject
-            .store(in: &cancellables)
-    }
-
+    // MARK: - Internal
     func trackIds(
         _ ids: [Int],
         date: Date = Date()
@@ -108,5 +105,9 @@ final class AttentionTracker {
             let batch = Batch(ids: Set(ids), date: date)
             batchSubject.send(batch)
         }
+    }
+
+    var outputPublisher: AnyPublisher<[Output], Never> {
+        outputSubject.eraseToAnyPublisher()
     }
 }
