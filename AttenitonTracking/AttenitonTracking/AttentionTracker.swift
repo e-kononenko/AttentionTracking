@@ -19,11 +19,15 @@ final class AttentionTracker {
         let date: Date
     }
 
+    private enum Constants {
+        static let throttleTime = 0.5
+        static let collectTime = 3.0
+        static let minimumViewingTime = 5.0
+    }
+
     private typealias HelperDict = [Int: (Date, Date)]  // dates that represent when we met this id first and last time
 
     private let queue = DispatchQueue(label: "attention tracking")  // serial queue where we will process our data
-    private let throttleTime = 0.5
-    private let collectTime = 3.0
     private let batchSubject: PassthroughSubject<Batch, Never> = .init()
     private let outputSubject: PassthroughSubject<[Output], Never> = .init()
     private var cancellables: Set<AnyCancellable> = .init()
@@ -39,7 +43,7 @@ final class AttentionTracker {
         batchSubject
         // slowing down to not have too many values
             .throttle(
-                for: .seconds(throttleTime),
+                for: .seconds(Constants.throttleTime),
                 scheduler: queue,
                 latest: true
             )
@@ -52,10 +56,14 @@ final class AttentionTracker {
                 )
                 return outputs
             }
-            .collect(.byTime(queue, .seconds(collectTime))) // collecting outputs to send them by batching
-            .map { outputs in
+            .collect(.byTime(queue, .seconds(Constants.collectTime))) // collecting outputs to send them by batching
+            .compactMap { outputs in
                 // since we receive array of arrays after collecting, we flatten it
-                outputs.flatMap { $0 }
+                let flattenedOutputs = outputs.flatMap {
+                    // filter if viewing time was too short
+                    $0.filter { $0.viewingTime > Constants.minimumViewingTime }
+                }
+                return !flattenedOutputs.isEmpty ? flattenedOutputs : nil
             }
             .subscribe(outputSubject)   // send the result into outputSubject
             .store(in: &cancellables)
