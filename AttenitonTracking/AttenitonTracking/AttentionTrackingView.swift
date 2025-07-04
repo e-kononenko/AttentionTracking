@@ -11,15 +11,13 @@ struct Item: Identifiable {
     let id: Int
 }
 
-// Define a custom PreferenceKey to track frames of child views
+// using PreferenceKey to report child frames
 struct ChildViewFramePreferenceKey: PreferenceKey {
-
-    // Default value is an empty dictionary, where keys are Int (IDs) and values are CGRect (frames of child views)
+    // empty dictionary, key is id, value is a child frame
     static var defaultValue: [Int: CGRect] = [:]
 
-    // Merging values from multiple child views into the main value
+    // merging frames of from multiple views together
     static func reduce(value: inout [Int: CGRect], nextValue: () -> [Int: CGRect]) {
-        // Merging the current value with the new value
         value.merge(nextValue(), uniquingKeysWith: { $1 })
     }
 }
