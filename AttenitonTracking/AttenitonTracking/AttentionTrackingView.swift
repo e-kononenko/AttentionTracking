@@ -11,7 +11,6 @@ struct Item: Identifiable {
     let id: Int
 }
 
-// using PreferenceKey to report child frames
 struct ChildViewFramePreferenceKey: PreferenceKey {
     // empty dictionary, key is id, value is a child frame
     static var defaultValue: [Int: CGRect] = [:]
@@ -27,7 +26,8 @@ struct AttentionTrackingView: View {
     @State private var parentBounds: CGRect = .zero
 
     @State private var attentionTracker: AttentionTracker = .init()
-    @State private var attentionOutputs: [AttentionTracker.Output] = .init()
+
+    @State private var resultText: String = ""
 
     var body: some View {
         GeometryReader { parentGeometry in
@@ -41,30 +41,31 @@ struct AttentionTrackingView: View {
             .ignoresSafeArea()
             .onAppear(perform: {
                 parentBounds = parentGeometry.frame(in: .global)
+
+                Task {
+                    for await outputModels in attentionTracker.outputSequence {
+                        resultText = outputModels
+                            .map { outputModel in
+                                // simple formatting
+                                let viewingTimeString = String(format: "%.2f", outputModel.viewingTime)
+                                return "id \(outputModel.id): \(viewingTimeString)"
+                            }
+                            .joined(separator: "\n")
+                    }
+                }
             })
             .onPreferenceChange(
                 ChildViewFramePreferenceKey.self,
-                perform: { childFrames in
-                    let visibleIds = childFrames
-                        .compactMap { (id, frame) -> Int? in
-                            return frame.intersects(parentBounds) ? id : nil
-                        }
-
-                    attentionTracker.trackIds(visibleIds)
+                perform: { idFrames in
+                    attentionTracker
+                        .track(
+                            input: .init(
+                                idFrames: idFrames,
+                                parentBounds: parentBounds
+                            )
+                        )
                 })
-            .onReceive(attentionTracker.outputPublisher, perform: { outputs in
-                self.attentionOutputs = outputs
-            })
-            .overlay {
-                let outputText = attentionOutputs
-                    .map { output in
-                        let viewingTimeString = String(format: "%.2f", output.viewingTime)
-
-                        return "id \(output.id): \(viewingTimeString)"
-                    }
-                    .joined(separator: "\n")
-                let resultText = "Result:\n\(outputText)"
-
+            .overlay(alignment: .top) {
                 ResultView(resultText: resultText)
             }
         }
@@ -72,34 +73,12 @@ struct AttentionTrackingView: View {
     }
 }
 
-/*
-struct ItemView: View {
-    let items: [Item] = (0..<100).map { Item(id: $0) }
-
-    var body: some View {
-        List {
-            ForEach(items) { item in
-                Text("Item \(item.id)")
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 400)
-                    .background(Color.mint)
-                    .listRowInsets(.init())
-            }
-        }
-        .listStyle(.plain)
-        .listRowSpacing(20)
-        .ignoresSafeArea()
-    }
-}
-*/
-
-
 struct ItemView: View {
     let item: Item
     var body: some View {
         Text("Item \(item.id)")
             .frame(maxWidth: .infinity)
-            .frame(height: 400)
+            .frame(height: 600)
             .background(Color.mint)
             .listRowInsets(.init())
             .overlay {
@@ -120,7 +99,7 @@ struct ResultView: View {
         VStack {
             ZStack(alignment: .topLeading) {
                 Color.black.opacity(0.5)
-                    .frame(height: 200)
+                    .frame(height: 300)
 
                 Text(resultText)
                     .font(.title2)
@@ -128,7 +107,6 @@ struct ResultView: View {
                     .padding(.top, 50)
                     .padding(.leading, 20)
             }
-            Spacer()
         }
     }
 }
@@ -136,7 +114,3 @@ struct ResultView: View {
 #Preview {
     AttentionTrackingView()
 }
-
-//#Preview {
-//    ItemView()
-//}
