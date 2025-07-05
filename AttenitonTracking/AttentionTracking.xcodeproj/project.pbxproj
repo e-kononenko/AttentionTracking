@@ -24,25 +24,25 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		C95A8E7B2E17E09A002BD872 /* AttenitonTracking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AttenitonTracking.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C95A8E8B2E17E09B002BD872 /* AttenitonTrackingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AttenitonTrackingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C95A8E952E17E09B002BD872 /* AttenitonTrackingUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AttenitonTrackingUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C95A8E7B2E17E09A002BD872 /* AttentionTracking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AttentionTracking.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C95A8E8B2E17E09B002BD872 /* AttentionTrackingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AttentionTrackingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C95A8E952E17E09B002BD872 /* AttentionTrackingUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AttentionTrackingUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		C95A8E7D2E17E09A002BD872 /* AttenitonTracking */ = {
+		C95A8E7D2E17E09A002BD872 /* AttentionTracking */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = AttenitonTracking;
+			path = AttentionTracking;
 			sourceTree = "<group>";
 		};
-		C95A8E8E2E17E09B002BD872 /* AttenitonTrackingTests */ = {
+		C95A8E8E2E17E09B002BD872 /* AttentionTrackingTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = AttenitonTrackingTests;
+			path = AttentionTrackingTests;
 			sourceTree = "<group>";
 		};
-		C95A8E982E17E09B002BD872 /* AttenitonTrackingUITests */ = {
+		C95A8E982E17E09B002BD872 /* AttentionTrackingUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = AttenitonTrackingUITests;
+			path = AttentionTrackingUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,9 +75,9 @@
 		C95A8E722E17E09A002BD872 = {
 			isa = PBXGroup;
 			children = (
-				C95A8E7D2E17E09A002BD872 /* AttenitonTracking */,
-				C95A8E8E2E17E09B002BD872 /* AttenitonTrackingTests */,
-				C95A8E982E17E09B002BD872 /* AttenitonTrackingUITests */,
+				C95A8E7D2E17E09A002BD872 /* AttentionTracking */,
+				C95A8E8E2E17E09B002BD872 /* AttentionTrackingTests */,
+				C95A8E982E17E09B002BD872 /* AttentionTrackingUITests */,
 				C95A8E7C2E17E09A002BD872 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -85,9 +85,9 @@
 		C95A8E7C2E17E09A002BD872 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C95A8E7B2E17E09A002BD872 /* AttenitonTracking.app */,
-				C95A8E8B2E17E09B002BD872 /* AttenitonTrackingTests.xctest */,
-				C95A8E952E17E09B002BD872 /* AttenitonTrackingUITests.xctest */,
+				C95A8E7B2E17E09A002BD872 /* AttentionTracking.app */,
+				C95A8E8B2E17E09B002BD872 /* AttentionTrackingTests.xctest */,
+				C95A8E952E17E09B002BD872 /* AttentionTrackingUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +95,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C95A8E7A2E17E09A002BD872 /* AttenitonTracking */ = {
+		C95A8E7A2E17E09A002BD872 /* AttentionTracking */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C95A8E9F2E17E09B002BD872 /* Build configuration list for PBXNativeTarget "AttenitonTracking" */;
+			buildConfigurationList = C95A8E9F2E17E09B002BD872 /* Build configuration list for PBXNativeTarget "AttentionTracking" */;
 			buildPhases = (
 				C95A8E772E17E09A002BD872 /* Sources */,
 				C95A8E782E17E09A002BD872 /* Frameworks */,
@@ -108,18 +108,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				C95A8E7D2E17E09A002BD872 /* AttenitonTracking */,
+				C95A8E7D2E17E09A002BD872 /* AttentionTracking */,
 			);
-			name = AttenitonTracking;
+			name = AttentionTracking;
 			packageProductDependencies = (
 			);
 			productName = AttenitonTracking;
-			productReference = C95A8E7B2E17E09A002BD872 /* AttenitonTracking.app */;
+			productReference = C95A8E7B2E17E09A002BD872 /* AttentionTracking.app */;
 			productType = "com.apple.product-type.application";
 		};
-		C95A8E8A2E17E09B002BD872 /* AttenitonTrackingTests */ = {
+		C95A8E8A2E17E09B002BD872 /* AttentionTrackingTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C95A8EA22E17E09B002BD872 /* Build configuration list for PBXNativeTarget "AttenitonTrackingTests" */;
+			buildConfigurationList = C95A8EA22E17E09B002BD872 /* Build configuration list for PBXNativeTarget "AttentionTrackingTests" */;
 			buildPhases = (
 				C95A8E872E17E09B002BD872 /* Sources */,
 				C95A8E882E17E09B002BD872 /* Frameworks */,
@@ -131,18 +131,18 @@
 				C95A8E8D2E17E09B002BD872 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				C95A8E8E2E17E09B002BD872 /* AttenitonTrackingTests */,
+				C95A8E8E2E17E09B002BD872 /* AttentionTrackingTests */,
 			);
-			name = AttenitonTrackingTests;
+			name = AttentionTrackingTests;
 			packageProductDependencies = (
 			);
 			productName = AttenitonTrackingTests;
-			productReference = C95A8E8B2E17E09B002BD872 /* AttenitonTrackingTests.xctest */;
+			productReference = C95A8E8B2E17E09B002BD872 /* AttentionTrackingTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		C95A8E942E17E09B002BD872 /* AttenitonTrackingUITests */ = {
+		C95A8E942E17E09B002BD872 /* AttentionTrackingUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C95A8EA52E17E09B002BD872 /* Build configuration list for PBXNativeTarget "AttenitonTrackingUITests" */;
+			buildConfigurationList = C95A8EA52E17E09B002BD872 /* Build configuration list for PBXNativeTarget "AttentionTrackingUITests" */;
 			buildPhases = (
 				C95A8E912E17E09B002BD872 /* Sources */,
 				C95A8E922E17E09B002BD872 /* Frameworks */,
@@ -154,13 +154,13 @@
 				C95A8E972E17E09B002BD872 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				C95A8E982E17E09B002BD872 /* AttenitonTrackingUITests */,
+				C95A8E982E17E09B002BD872 /* AttentionTrackingUITests */,
 			);
-			name = AttenitonTrackingUITests;
+			name = AttentionTrackingUITests;
 			packageProductDependencies = (
 			);
 			productName = AttenitonTrackingUITests;
-			productReference = C95A8E952E17E09B002BD872 /* AttenitonTrackingUITests.xctest */;
+			productReference = C95A8E952E17E09B002BD872 /* AttentionTrackingUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -186,7 +186,7 @@
 					};
 				};
 			};
-			buildConfigurationList = C95A8E762E17E09A002BD872 /* Build configuration list for PBXProject "AttenitonTracking" */;
+			buildConfigurationList = C95A8E762E17E09A002BD872 /* Build configuration list for PBXProject "AttentionTracking" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -200,9 +200,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				C95A8E7A2E17E09A002BD872 /* AttenitonTracking */,
-				C95A8E8A2E17E09B002BD872 /* AttenitonTrackingTests */,
-				C95A8E942E17E09B002BD872 /* AttenitonTrackingUITests */,
+				C95A8E7A2E17E09A002BD872 /* AttentionTracking */,
+				C95A8E8A2E17E09B002BD872 /* AttentionTrackingTests */,
+				C95A8E942E17E09B002BD872 /* AttentionTrackingUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -258,12 +258,12 @@
 /* Begin PBXTargetDependency section */
 		C95A8E8D2E17E09B002BD872 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = C95A8E7A2E17E09A002BD872 /* AttenitonTracking */;
+			target = C95A8E7A2E17E09A002BD872 /* AttentionTracking */;
 			targetProxy = C95A8E8C2E17E09B002BD872 /* PBXContainerItemProxy */;
 		};
 		C95A8E972E17E09B002BD872 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = C95A8E7A2E17E09A002BD872 /* AttenitonTracking */;
+			target = C95A8E7A2E17E09A002BD872 /* AttentionTracking */;
 			targetProxy = C95A8E962E17E09B002BD872 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -395,7 +395,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"AttenitonTracking/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"AttentionTracking/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -408,7 +408,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ekononenko.AttenitonTracking;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ekononenko.AttentionTracking;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -423,7 +423,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"AttenitonTracking/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"AttentionTracking/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -436,7 +436,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ekononenko.AttenitonTracking;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ekononenko.AttentionTracking;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -458,7 +458,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AttenitonTracking.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AttenitonTracking";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AttentionTracking.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AttentionTracking";
 			};
 			name = Debug;
 		};
@@ -476,7 +476,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AttenitonTracking.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AttenitonTracking";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AttentionTracking.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AttentionTracking";
 			};
 			name = Release;
 		};
@@ -515,7 +515,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C95A8E762E17E09A002BD872 /* Build configuration list for PBXProject "AttenitonTracking" */ = {
+		C95A8E762E17E09A002BD872 /* Build configuration list for PBXProject "AttentionTracking" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C95A8E9D2E17E09B002BD872 /* Debug */,
@@ -524,7 +524,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C95A8E9F2E17E09B002BD872 /* Build configuration list for PBXNativeTarget "AttenitonTracking" */ = {
+		C95A8E9F2E17E09B002BD872 /* Build configuration list for PBXNativeTarget "AttentionTracking" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C95A8EA02E17E09B002BD872 /* Debug */,
@@ -533,7 +533,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C95A8EA22E17E09B002BD872 /* Build configuration list for PBXNativeTarget "AttenitonTrackingTests" */ = {
+		C95A8EA22E17E09B002BD872 /* Build configuration list for PBXNativeTarget "AttentionTrackingTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C95A8EA32E17E09B002BD872 /* Debug */,
@@ -542,7 +542,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C95A8EA52E17E09B002BD872 /* Build configuration list for PBXNativeTarget "AttenitonTrackingUITests" */ = {
+		C95A8EA52E17E09B002BD872 /* Build configuration list for PBXNativeTarget "AttentionTrackingUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C95A8EA62E17E09B002BD872 /* Debug */,

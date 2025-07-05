@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct AttenitonTrackingApp: App {
+struct AttentionTrackingApp: App {
     var body: some Scene {
         WindowGroup {
             AttentionTrackingView()
