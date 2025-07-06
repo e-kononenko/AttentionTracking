@@ -7,10 +7,6 @@
 
 import SwiftUI
 
-struct Item: Identifiable {
-    let id: Int
-}
-
 struct ChildViewFramePreferenceKey: PreferenceKey {
     // empty dictionary, key is id, value is a child frame
     static var defaultValue: [Int: CGRect] = [:]
