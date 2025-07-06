@@ -7,11 +7,12 @@
 
 import SwiftUI
 
-struct ChildViewFramePreferenceKey: PreferenceKey {
-    // empty dictionary, key is id, value is a child frame
+// collecting ids and frames from multiple child views
+struct ItemFramePreferenceKey: PreferenceKey {
+    // dictionary that accumulates multiple pairs of id and frame
     static var defaultValue: [Int: CGRect] = [:]
 
-    // merging frames from multiple views into a single dictionary
+    // processing next value - merging it with the accumulator
     static func reduce(value: inout [Int: CGRect], nextValue: () -> [Int: CGRect]) {
         value.merge(nextValue(), uniquingKeysWith: { $1 })
     }
