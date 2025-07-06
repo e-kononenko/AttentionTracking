@@ -19,13 +19,14 @@ struct ChildViewFramePreferenceKey: PreferenceKey {
 
 struct AttentionTrackingView: View {
     @State private var items: [Item] = (0...100).map { Item(id: $0) }
-    @State private var parentBounds: CGRect = .zero
+    @State private var parentFrame: CGRect = .zero
 
     @State private var attentionTracker: AttentionTracker = .init()
 
     @State private var resultText: String = ""
 
     var body: some View {
+        Text("Test")
         GeometryReader { parentGeometry in
             List {
                 ForEach(items) { item in
@@ -36,8 +37,12 @@ struct AttentionTrackingView: View {
             .listRowSpacing(20)
             .ignoresSafeArea()
             .onAppear(perform: {
-                parentBounds = parentGeometry.frame(in: .global)
+                parentFrame = parentGeometry.frame(in: .global)
 
+                print("parentFrame = \(parentFrame)")
+                var aaa = 0
+                aaa += 1
+                
                 Task {
                     for await outputModels in attentionTracker.outputSequence {
                         resultText = outputModels
@@ -57,7 +62,7 @@ struct AttentionTrackingView: View {
                         .track(
                             input: .init(
                                 idFrames: idFrames,
-                                parentBounds: parentBounds
+                                parentFrame: parentFrame
                             )
                         )
                 })
@@ -65,6 +70,26 @@ struct AttentionTrackingView: View {
                 ResultView(resultText: resultText)
             }
         }
+        .ignoresSafeArea()
+    }
+}
+
+struct AttentionTrackingViewTest: View {
+    @State private var items: [Item] = (0...100).map { Item(id: $0) }
+    @State private var parentFrame: CGRect = .zero
+
+    @State private var attentionTracker: AttentionTracker = .init()
+
+    @State private var resultText: String = ""
+
+    var body: some View {
+        List {
+            ForEach(items) { item in
+                ItemView(item: item)
+            }
+        }
+        .listStyle(.plain)
+        .listRowSpacing(20)
         .ignoresSafeArea()
     }
 }
@@ -109,4 +134,9 @@ struct ResultView: View {
 
 #Preview {
     AttentionTrackingView()
+}
+
+
+#Preview {
+    AttentionTrackingViewTest()
 }

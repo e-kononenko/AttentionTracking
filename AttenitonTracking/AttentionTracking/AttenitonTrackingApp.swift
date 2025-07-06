@@ -11,6 +11,7 @@ import SwiftUI
 struct AttentionTrackingApp: App {
     var body: some Scene {
         WindowGroup {
+//            AttentionTrackingViewTest()
             AttentionTrackingView()
         }
     }

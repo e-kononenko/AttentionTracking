@@ -13,13 +13,13 @@ enum VisibilityHelper {
     // If it lays within its parent bounds for visibilityRate of its height - we consider it visible
     static func isFrameVisible(
         _ frame: CGRect,
-        inParentBounds parentBounds: CGRect,
+        inParentFrame parentFrame: CGRect,
         visibilityRate: Double = 0.7
     ) -> Bool {
         guard frame.height > 0 else { return false }
 
-        let intersectionTop = max(frame.minY, parentBounds.minY)
-        let intersectionBottom = min(frame.maxY, parentBounds.maxY)
+        let intersectionTop = max(frame.minY, parentFrame.minY)
+        let intersectionBottom = min(frame.maxY, parentFrame.maxY)
 
         let visibleHeight = max(0, intersectionBottom - intersectionTop)
 

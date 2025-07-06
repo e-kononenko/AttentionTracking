@@ -16,7 +16,7 @@ final class AttentionTracker {
     
     struct InputModel {
         let idFrames: [Int: CGRect]
-        let parentBounds: CGRect
+        let parentFrame: CGRect
         let date: Date = .init()
     }
 
@@ -80,7 +80,7 @@ final class AttentionTracker {
             .compactMap { (id, frame) in
                 let isVisible = VisibilityHelper.isFrameVisible(
                     frame,
-                    inParentBounds: input.parentBounds
+                    inParentFrame: input.parentFrame
                 )
                 
                 return isVisible ? id : nil
