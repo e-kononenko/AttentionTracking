@@ -111,7 +111,7 @@ final class AttentionTracker2 {
         }
     }
 
-    func track(visibleIds: Set<Int>, date: Date = .init()) {
+    func trackVisibleIds(_ visibleIds: Set<Int>, date: Date = .init()) {
         guard !visibleIds.isEmpty else {
             return
         }
