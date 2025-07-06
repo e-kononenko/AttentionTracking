@@ -7,14 +7,10 @@
 import Foundation
 
 enum VisibilityHelper {
-    // Frames can be partially visible.
-    // Small parts of other frames can be shown at top and at bottom.
-    // We don't want to consider them as visible.
-    // If it lays within its parent bounds for visibilityRate of its height - we consider it visible
-    static func isFrameVisible(
+    static func isItemFrameVisible(
         _ frame: CGRect,
         inParentFrame parentFrame: CGRect,
-        visibilityRate: Double = 0.7
+        visibilityThreshold: Double = 1.0 // for partially visible items (1.0 - fully visible, 0.5 - visible at 50%)
     ) -> Bool {
         guard frame.height > 0 else { return false }
 
@@ -25,6 +21,6 @@ enum VisibilityHelper {
 
         let visibility = visibleHeight / frame.height
 
-        return visibility >= visibilityRate
+        return visibility >= visibilityThreshold
     }
 }

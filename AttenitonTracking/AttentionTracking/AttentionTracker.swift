@@ -78,7 +78,7 @@ final class AttentionTracker {
         // check only ids that are visible within their parent's bounds
         let visibleIds = input.idFrames
             .compactMap { (id, frame) in
-                let isVisible = VisibilityHelper.isFrameVisible(
+                let isVisible = VisibilityHelper.isItemFrameVisible(
                     frame,
                     inParentFrame: input.parentFrame
                 )
