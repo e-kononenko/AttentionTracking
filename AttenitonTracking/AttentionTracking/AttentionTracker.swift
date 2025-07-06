@@ -19,20 +19,19 @@ final class AttentionTracker {
         let parentBounds: CGRect
         let date: Date = .init()
     }
-    
+
+    private typealias Batch = (ids: Set<Int>, date: Date)   // ids visible at a specific time
+    private typealias HelperDict = [Int: Date]  // id and its first time appearance
+
     private enum Constants {
         static let collectTime = 10.0
         static let minimumViewingTime = 1.0
         static let throttleTime = 0.3
     }
-    
-    private typealias HelperDict = [Int: Date]  // id and when it appeared first time
-    
+
     private let queue = DispatchQueue(label: "attention tracking")  // serial queue where we will process our data
-    
     private let inputSubject: PassthroughSubject<InputModel, Never> = .init()
     private let outputSubject: PassthroughSubject<[OutputModel], Never> = .init()
-    
     private var cancellables: Set<AnyCancellable> = .init()
     
     init() {
@@ -60,8 +59,6 @@ final class AttentionTracker {
             .subscribe(outputSubject)   // send the result into outputSubject
             .store(in: &cancellables)
     }
-    
-    private typealias Batch = (ids: Set<Int>, date: Date)
     
     private static func convertInputToOutputModels(_ input: InputModel, helperDict: inout HelperDict) -> [OutputModel]? {
         guard let batch = makeBatchOfVisibleIds(fromInput: input) else {
