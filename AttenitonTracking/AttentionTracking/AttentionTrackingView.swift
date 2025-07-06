@@ -11,7 +11,7 @@ struct ChildViewFramePreferenceKey: PreferenceKey {
     // empty dictionary, key is id, value is a child frame
     static var defaultValue: [Int: CGRect] = [:]
 
-    // merging frames of from multiple views together
+    // merging frames from multiple views into a single dictionary
     static func reduce(value: inout [Int: CGRect], nextValue: () -> [Int: CGRect]) {
         value.merge(nextValue(), uniquingKeysWith: { $1 })
     }
