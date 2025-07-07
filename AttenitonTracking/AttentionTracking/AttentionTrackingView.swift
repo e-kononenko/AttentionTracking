@@ -27,7 +27,6 @@ struct AttentionTrackingView: View {
     @State private var resultText: String = ""
 
     var body: some View {
-        Text("Test")
         GeometryReader { parentGeometry in
             List {
                 ForEach(items) { item in
@@ -40,53 +39,38 @@ struct AttentionTrackingView: View {
             .onAppear(perform: {
                 parentFrame = parentGeometry.frame(in: .global)
 
-                print("parentFrame = \(parentFrame)")
-                var aaa = 0
-                aaa += 1
-                
                 Task {
                     for await outputModels in attentionTracker.outputSequence {
                         resultText = outputModels
                             .map { outputModel in
                                 // simple formatting
                                 let viewingTimeString = String(format: "%.2f", outputModel.viewingTime)
-                                return "id \(outputModel.id): \(viewingTimeString)"
+                                return "\(outputModel.id):\(viewingTimeString)"
                             }
-                            .joined(separator: "\n")
+                            .joined(separator: ", ")
                     }
                 }
             })
             .onPreferenceChange(
-                ChildViewFramePreferenceKey.self,
+                ItemFramePreferenceKey.self,
                 perform: { idFrames in
+                    let visibleIds = idFrames.compactMap { keyValue in
+                        return VisibilityHelper
+                            .isChildVisible(
+                                childFrame: keyValue.value,
+                                inParentFrame: parentFrame,
+                                visibilityThreshold: 0.7
+                            ) ? keyValue.key : nil
+
+                    }
                     attentionTracker
                         .trackVisibleIds(Set(visibleIds))
                 })
             .overlay(alignment: .top) {
                 ResultView(resultText: resultText)
+                    .allowsHitTesting(false)
             }
         }
-        .ignoresSafeArea()
-    }
-}
-
-struct AttentionTrackingViewTest: View {
-    @State private var items: [Item] = (0...100).map { Item(id: $0) }
-    @State private var parentFrame: CGRect = .zero
-
-    @State private var attentionTracker: AttentionTracker = .init()
-
-    @State private var resultText: String = ""
-
-    var body: some View {
-        List {
-            ForEach(items) { item in
-                ItemView(item: item)
-            }
-        }
-        .listStyle(.plain)
-        .listRowSpacing(20)
-        .ignoresSafeArea()
     }
 }
 
@@ -99,11 +83,13 @@ struct ItemView: View {
             .background(Color.mint)
             .listRowInsets(.init())
             .overlay {
-                GeometryReader { childGeometry in
+                GeometryReader { geometry in
                     Color.clear
+                    // Setting value for the preference key
                         .preference(
-                            key: ChildViewFramePreferenceKey.self,
-                            value: [item.id: childGeometry.frame(in: .global)]
+                            key: ItemFramePreferenceKey.self,
+                            // Getting frame in global coordinates and pair it with the id
+                            value: [item.id: geometry.frame(in: .global)]
                         )
                 }
             }
@@ -116,23 +102,19 @@ struct ResultView: View {
         VStack {
             ZStack(alignment: .topLeading) {
                 Color.black.opacity(0.5)
-                    .frame(height: 300)
+                    .frame(height: 250)
 
                 Text(resultText)
                     .font(.title2)
                     .foregroundColor(.white)
-                    .padding(.top, 50)
+                    .padding(.top, 60)
                     .padding(.leading, 20)
             }
+            .ignoresSafeArea()
         }
     }
 }
 
 #Preview {
     AttentionTrackingView()
-}
-
-
-#Preview {
-    AttentionTrackingViewTest()
 }
