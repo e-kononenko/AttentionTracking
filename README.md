@@ -8,7 +8,7 @@ Partially visible items (at minimum 70%) are also considered as visible.
 
 Then we process visible items and understand, how long they were visible. 
 
-If an item is visible longer than minimun viewing time, we add it to the result.
+If an item was visible longer than minimun viewing time, we add it to the result.
 
 Results are returned in batches with `Combine`.
 
