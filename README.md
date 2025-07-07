@@ -6,13 +6,13 @@ We find visible cells with `GeometryReader` and custom `PreferenceKey`.
 
 Partially visible items (at minimum 70%) are also considered as visible.
 
-Then we process visible ids and understand, how long they were visible. 
+Then we process visible items and understand, how long they were visible. 
 
-If they were visible longer than minimun viewing time, we add it to the result.
+If an item is visible longer than minimun viewing time, we add it to the result.
 
-Results are added to batches with `Combine`.
+Results are returned in batches with `Combine`.
 
-The view consumes result as `AsyncSequence` and displays it at the overlay.
+The view consumes results as `AsyncSequence` and displays them at the overlay.
 
 https://github.com/user-attachments/assets/0b67d4e5-94ca-4124-b1ce-506e6251a347
 
