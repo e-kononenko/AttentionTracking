@@ -1,6 +1,6 @@
 # AttentionTracking
 
-Mechanism that understands, what items in `SwiftUI` List are interesting to users, based on theire viewing time. 
+Mechanism that understands, what items in `SwiftUI` List are interesting to users, based on their viewing time. 
 
 We find visible cells with `GeometryReader` and custom `PreferenceKey`.
 
