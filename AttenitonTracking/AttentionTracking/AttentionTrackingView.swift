@@ -60,12 +60,7 @@ struct AttentionTrackingView: View {
                 ChildViewFramePreferenceKey.self,
                 perform: { idFrames in
                     attentionTracker
-                        .track(
-                            input: .init(
-                                idFrames: idFrames,
-                                parentFrame: parentFrame
-                            )
-                        )
+                        .trackVisibleIds(Set(visibleIds))
                 })
             .overlay(alignment: .top) {
                 ResultView(resultText: resultText)
