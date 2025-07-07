@@ -4,6 +4,8 @@ Mechanism that understands, what items in `SwiftUI` List are interesting to user
 
 We find visible cells with `GeometryReader` and custom `PreferenceKey`.
 
+Partially visible items (at minimum 70%) are also considered as visible.
+
 Then we process visible ids and understand, how long they were visible. 
 
 If they were visible longer than minimun viewing time, we add it to the result.
