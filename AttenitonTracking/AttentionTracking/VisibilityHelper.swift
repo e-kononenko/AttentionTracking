@@ -7,16 +7,20 @@
 import Foundation
 
 enum VisibilityHelper {
-    static func isItemFrameVisible(
-        _ frame: CGRect,
+    static func isChildVisible(
+        childFrame: CGRect,
         inParentFrame parentFrame: CGRect,
-        visibilityThreshold: Double = 1.0 // for partially visible items, e.g 0.7 - visible at 70%
+        // for partially visible items, e.g 0.7 - visible at 70%
+        visibilityThreshold: Double = 1.0
     ) -> Bool {
-        guard frame.height > 0 else { return false }
+        guard childFrame.height > 0 else { return false }
+        // find intersection frame and take its height
+        let visibleHeight = childFrame.intersection(parentFrame).height
 
-        let visibleHeight = frame.intersection(parentFrame).height
-        let visibility = visibleHeight / frame.height
+        // what part of a child is visible
+        let visibility = visibleHeight / childFrame.height
 
+        // consider visible if it exceeds the threshold
         return visibility >= visibilityThreshold
     }
 }
