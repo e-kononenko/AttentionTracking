@@ -64,7 +64,7 @@ struct AttentionTrackingView: View {
 
                     }
                     attentionTracker
-                        .trackVisibleIds(Set(visibleIds))
+                        .trackVisibleIds(visibleIds)
                 })
             .overlay(alignment: .top) {
                 ResultView(resultText: resultText)

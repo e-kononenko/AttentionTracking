@@ -11,9 +11,9 @@ import Foundation
 extension AttentionTracking {
     final class Tracker {
         private let queue = DispatchQueue(label: "attention tracking")  // serial queue where we will process our data
-        // send all batches into this subject
-        private let batchSubject: PassthroughSubject<Batch, Never> = .init()
-        // send all batches into this subject
+        // send all visible ids into this subject
+        private let visibleIdsSubject: PassthroughSubject<[Int], Never> = .init()
+        // subject to receive output models
         private let outputSubject: PassthroughSubject<[Output], Never> = .init()
         private var cancellables: Set<AnyCancellable> = .init()
 
@@ -27,21 +27,17 @@ extension AttentionTracking {
         }
 
         private func setupSubscriptions() {
-            // creating helperDict which we will update with new batches
+            // creating helperDict which we will use during the process
             var helperDict: HelperDict = .init()
 
-            batchSubject
+            visibleIdsSubject
                 .receive(on: queue) // receive event and continue on the serial queue
-                .compactMap { batch -> [Output]? in
-                    var outputs: [Output] = .init()
-                    // processing new batch, the result will be in outputs array
-                    processBatch(
-                        batch: batch,
+                .compactMap {
+                    getOutputsFromVisibleIds(
+                        visibleIds: $0,
                         minimumViewingTime: Constants.minimumViewingTime,
-                        outputs: &outputs,
                         helperDict: &helperDict
                     )
-                    return outputs.isEmpty ? nil : outputs  // proceed only if there are outputs
                 }
                 .collect(.byTime(queue, .seconds(Constants.collectTime))) // collecting outputs to send them in batches
                 .map { outputs in
@@ -56,12 +52,11 @@ extension AttentionTracking {
         }
 
         // MARK: - Internal
-        func trackVisibleIds(_ visibleIds: Set<Int>, date: Date = .init()) {
+        func trackVisibleIds(_ visibleIds: [Int], date: Date = .init()) {
             guard !visibleIds.isEmpty else {
                 return
             }
-            let batch: Batch = .init(visibleIds: visibleIds, date: date)
-            batchSubject.send(batch)
+            visibleIdsSubject.send(visibleIds)
         }
 
         // returning output from Combine subject as a Concurrency's output sequence
