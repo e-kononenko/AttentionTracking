@@ -22,7 +22,7 @@ struct AttentionTrackingView: View {
     @State private var items: [Item] = (0...100).map { Item(id: $0) }
     @State private var parentFrame: CGRect = .zero
 
-    @State private var attentionTracker: AttentionTracker = .init()
+    @State private var attentionTracker: AttentionTracking.Tracker = .init()
 
     @State private var resultText: String = ""
 
