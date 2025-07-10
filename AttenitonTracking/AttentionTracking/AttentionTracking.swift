@@ -15,7 +15,7 @@ enum AttentionTracking {
     typealias HelperDict = [Int: (Date, Date)]  // id and its first and last appearance dates
 
     static func getOutputsFromVisibleIds(
-        visibleIds: [Int],
+        _ visibleIds: [Int],
         minimumViewingTime: TimeInterval,
         visibilityDate: Date = Date(),
         helperDict: inout HelperDict) -> [Output]? {

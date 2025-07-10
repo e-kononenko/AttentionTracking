@@ -33,11 +33,7 @@ extension AttentionTracking {
             visibleIdsSubject
                 .receive(on: queue) // receive event and continue on the serial queue
                 .compactMap {
-                    getOutputsFromVisibleIds(
-                        visibleIds: $0,
-                        minimumViewingTime: Constants.minimumViewingTime,
-                        helperDict: &helperDict
-                    )
+                    getOutputsFromVisibleIds($0, minimumViewingTime: Constants.minimumViewingTime, helperDict: &helperDict)
                 }
                 .collect(.byTime(queue, .seconds(Constants.collectTime))) // collecting outputs to send them in batches
                 .map { outputs in
