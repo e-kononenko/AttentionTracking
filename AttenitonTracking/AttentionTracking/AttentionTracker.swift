@@ -10,11 +10,13 @@ import Foundation
 
 extension AttentionTracking {
     final class Tracker {
-        private let queue = DispatchQueue(label: "attention tracking")  // serial queue where we will process our data
+        // serial queue where we will process our data
+        private let queue = DispatchQueue(label: "attention tracking")
         // send all visible ids into this subject
-        private let visibleIdsSubject: PassthroughSubject<[Int], Never> = .init()
+        private let inputSubject: PassthroughSubject<[Int], Never> = .init()
         // subject to receive output models
         private let outputSubject: PassthroughSubject<[Output], Never> = .init()
+        // storing our subscritions here
         private var cancellables: Set<AnyCancellable> = .init()
 
         enum Constants {
@@ -27,21 +29,32 @@ extension AttentionTracking {
         }
 
         private func setupSubscriptions() {
-            // creating helperDict which we will use during the process
+            // creating helperDict which will be used during the process
             var helperDict: HelperDict = .init()
 
-            visibleIdsSubject
-                .receive(on: queue) // receive event and continue on the serial queue
+            inputSubject
+                // receive on the serial queue to put work in background and to guarantee thread-safe access to helperDict
+                .receive(on: queue)
+                // convert visible ids to outputs and filter nil results
                 .compactMap {
-                    getOutputsFromVisibleIds($0, minimumViewingTime: Constants.minimumViewingTime, helperDict: &helperDict)
+                    getOutputsFromVisibleIds(
+                        $0,
+                        helperDict: &helperDict,
+                        minimumViewingTime: Constants.minimumViewingTime
+                    )
                 }
-                .collect(.byTime(queue, .seconds(Constants.collectTime))) // collecting outputs to send them in batches
-                .map { outputs in
-                    // since we receive array of arrays after collecting, we flatten it into a single array
-                    outputs.flatMap { $0 }
+                // collecting outputs to send them in batches
+                .collect(.byTime(queue, .seconds(Constants.collectTime)))
+                .map { allOutputs in
+                    // we receive array of arrays of outputs after collecting.
+                    // To convert it to a single array, we flatten it
+                    allOutputs.flatMap { $0 }
                 }
-                .receive(on: DispatchQueue.main)    // go back to the main queue
+                // go back to the main queue
+                .receive(on: DispatchQueue.main)
+                // subscribing on values
                 .sink(receiveValue: { [weak self] outputs in
+                    // sending each array of outputs to the output subject
                     self?.outputSubject.send(outputs)
                 })
                 .store(in: &cancellables)
@@ -52,7 +65,8 @@ extension AttentionTracking {
             guard !visibleIds.isEmpty else {
                 return
             }
-            visibleIdsSubject.send(visibleIds)
+            // sending ids to the visible ids subject
+            inputSubject.send(visibleIds)
         }
 
         // returning output from Combine subject as a Concurrency's output sequence
