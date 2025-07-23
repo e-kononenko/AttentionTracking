@@ -16,10 +16,12 @@ enum AttentionTracking {
 
     static func getOutputsFromVisibleIds(
         _ visibleIds: [Int],
+        // we can modify inout parameter inside the function
+        helperDict: inout HelperDict,
         minimumViewingTime: TimeInterval,
-        visibilityDate: Date = Date(),
-        helperDict: inout HelperDict) -> [Output]? {
-            // put visible ids into set for O(1) read complexity
+        currentDate: Date = Date()
+    ) -> [Output]? {
+            // put visible ids into Set for O(1) reading complexity
             let visibleIdsSet = Set(visibleIds)
 
             // check what was in helper dict, but now disappeared
@@ -27,20 +29,21 @@ enum AttentionTracking {
                 !visibleIdsSet.contains($0.key)
             }
 
+            // creating array to store outputs
             var outputs: [Output] = []
 
+            // creating outputs for disappeared ids
             for (id, dates) in disappearedIdsAndDates {
-                helperDict.removeValue(forKey: id)  // remove from the helperDict since it disappeared
+                // remove from the helperDict since it disappeared
+                helperDict.removeValue(forKey: id)
 
-                let viewingTime = dates.1.timeIntervalSince(dates.0) // finding difference betwen dates of first and last appearance
+                // finding difference betwen dates of first and last appearance
+                let viewingTime = dates.1.timeIntervalSince(dates.0)
 
                 // create Output only if we exceeded minimumViewingTime
                 if viewingTime >= minimumViewingTime {
-                    let outputItem: Output = .init(
-                        id: id,
-                        viewingTime: viewingTime
-                    )
-                    outputs.append(outputItem)
+                    let output = Output(id: id, viewingTime: viewingTime)
+                    outputs.append(output)
                 }
             }
 
@@ -48,13 +51,14 @@ enum AttentionTracking {
             for id in visibleIdsSet {
                 if let dates = helperDict[id] {
                     // we have already seen this id before - we update the last seen date
-                    helperDict[id] = (dates.0, visibilityDate)
+                    helperDict[id] = (dates.0, currentDate)
                 } else {
                     // for new ids first and last seen dates are equal
-                    helperDict[id] = (visibilityDate, visibilityDate)
+                    helperDict[id] = (currentDate, currentDate)
                 }
             }
 
-            return outputs.isEmpty ? nil : outputs  // proceed only if there are outputs
+            // do not return empty array
+            return outputs.isEmpty ? nil : outputs
         }
 }
