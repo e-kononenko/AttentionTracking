@@ -68,7 +68,6 @@ struct AttentionTrackingView: View {
                 })
             .overlay(alignment: .top) {
                 ResultView(resultText: resultText)
-                    .allowsHitTesting(false)
             }
         }
     }
@@ -79,7 +78,7 @@ struct ItemView: View {
     var body: some View {
         Text("Item \(item.id)")
             .frame(maxWidth: .infinity)
-            .frame(height: 600)
+            .frame(height: 500)
             .background(Color.mint)
             .listRowInsets(.init())
             .overlay {
@@ -112,6 +111,8 @@ struct ResultView: View {
             }
             .ignoresSafeArea()
         }
+        // let the gestures pass through
+        .allowsHitTesting(false)
     }
 }
 
