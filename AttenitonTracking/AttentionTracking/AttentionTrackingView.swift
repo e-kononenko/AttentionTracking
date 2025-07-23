@@ -20,7 +20,6 @@ struct ItemFramePreferenceKey: PreferenceKey {
 
 struct AttentionTrackingView: View {
     @State private var items: [Item] = (0...100).map { Item(id: $0) }
-    @State private var parentFrame: CGRect = .zero
 
     @State private var attentionTracker: AttentionTracking.Tracker = .init()
 
@@ -37,8 +36,6 @@ struct AttentionTrackingView: View {
             .listRowSpacing(20)
             .ignoresSafeArea()
             .onAppear(perform: {
-                parentFrame = parentGeometry.frame(in: .global)
-
                 Task {
                     for await outputModels in attentionTracker.outputSequence {
                         resultText = outputModels
@@ -54,7 +51,11 @@ struct AttentionTrackingView: View {
             .onPreferenceChange(
                 ItemFramePreferenceKey.self,
                 perform: { idFrames in
-                    let visibleIds = idFrames.compactMap { keyValue in
+
+                    let parentFrame = parentGeometry.frame(in: .global)
+
+                    // mapping [Int : CGRect] dictionary into [Int] array of visible ids
+                    let visibleIds: [Int] = idFrames.compactMap { keyValue in
                         return VisibilityHelper
                             .isChildVisible(
                                 childFrame: keyValue.value,
