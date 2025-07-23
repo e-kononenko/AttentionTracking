@@ -39,11 +39,13 @@ struct AttentionTrackingView: View {
                 Task {
                     for await outputModels in attentionTracker.outputSequence {
                         resultText = outputModels
+                            // mapping models to strings
                             .map { outputModel in
                                 // simple formatting
                                 let viewingTimeString = String(format: "%.2f", outputModel.viewingTime)
                                 return "\(outputModel.id):\(viewingTimeString)"
                             }
+                            // merge all strings into a single one
                             .joined(separator: ", ")
                     }
                 }
@@ -51,7 +53,7 @@ struct AttentionTrackingView: View {
             .onPreferenceChange(
                 ItemFramePreferenceKey.self,
                 perform: { idFrames in
-
+                    // finding parent frame
                     let parentFrame = parentGeometry.frame(in: .global)
 
                     // mapping [Int : CGRect] dictionary into [Int] array of visible ids
@@ -62,7 +64,6 @@ struct AttentionTrackingView: View {
                                 inParentFrame: parentFrame,
                                 visibilityThreshold: 0.7
                             ) ? keyValue.key : nil
-
                     }
                     attentionTracker
                         .trackVisibleIds(visibleIds)
