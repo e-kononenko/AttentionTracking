@@ -10,8 +10,6 @@ import Foundation
 
 extension AttentionTracking {
     final class Tracker {
-        // serial queue where we will process our data
-        private let queue = DispatchQueue(label: "attention tracking")
         // send all visible ids into this subject
         private let inputSubject: PassthroughSubject<[Int], Never> = .init()
         // subject to receive output models
@@ -33,8 +31,6 @@ extension AttentionTracking {
             var helperDict: HelperDict = .init()
 
             inputSubject
-                // receive on the serial queue to put work in background and to guarantee thread-safe access to helperDict
-                .receive(on: queue)
                 // convert visible ids to outputs and filter nil results
                 .compactMap {
                     getOutputsFromVisibleIds(
@@ -44,14 +40,14 @@ extension AttentionTracking {
                     )
                 }
                 // collecting outputs to send them in batches
-                .collect(.byTime(queue, .seconds(Constants.collectTime)))
+                .collect(
+                    .byTime(DispatchQueue.main, .seconds(Constants.collectTime))
+                )
                 .map { allOutputs in
                     // we receive array of arrays of outputs after collecting.
                     // To convert it to a single array, we flatten it
                     allOutputs.flatMap { $0 }
                 }
-                // go back to the main queue
-                .receive(on: DispatchQueue.main)
                 // subscribing on values
                 .sink(receiveValue: { [weak self] outputs in
                     // sending each array of outputs to the output subject
