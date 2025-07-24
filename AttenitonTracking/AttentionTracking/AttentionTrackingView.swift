@@ -20,9 +20,7 @@ struct ItemFramePreferenceKey: PreferenceKey {
 
 struct AttentionTrackingView: View {
     @State private var items: [Item] = (0...100).map { Item(id: $0) }
-
     @State private var attentionTracker: AttentionTracking.Tracker = .init()
-
     @State private var resultText: String = ""
 
     var body: some View {
