@@ -17,7 +17,7 @@ extension AttentionTracking {
         // storing our subscritions here
         private var cancellables: Set<AnyCancellable> = .init()
 
-        enum Constants {
+        private enum Constants {
             static let minimumViewingTime = 2.0
             static let collectTime = 10.0
         }
@@ -33,11 +33,12 @@ extension AttentionTracking {
             inputSubject
                 // convert visible ids to outputs and filter nil results
                 .compactMap {
-                    getOutputsFromVisibleIds(
+                    let outputs = getOutputsFromVisibleIds(
                         $0,
                         helperDict: &helperDict,
                         minimumViewingTime: Constants.minimumViewingTime
                     )
+                    return outputs.isEmpty ? nil : outputs
                 }
                 // collecting outputs to send them in batches
                 .collect(
@@ -57,7 +58,7 @@ extension AttentionTracking {
         }
 
         // MARK: - Internal
-        func trackVisibleIds(_ visibleIds: [Int], date: Date = .init()) {
+        func trackVisibleIds(_ visibleIds: [Int]) {
             guard !visibleIds.isEmpty else {
                 return
             }

@@ -7,9 +7,14 @@
 import Foundation
 
 enum AttentionTracking {
-    struct Output {
+    struct Output: CustomStringConvertible {
         let id: Int
-        let viewingTime: TimeInterval // how long the id was visible
+        let viewingTime: TimeInterval // how long the id was viewed
+
+        var description: String {
+            let viewingTimeString = String(format: "%.2f", viewingTime)
+            return "Id \(id) was viewed for \(viewingTimeString) seconds"
+        }
     }
 
     typealias HelperDict = [Int: (Date, Date)]  // id and its first and last appearance dates
@@ -20,7 +25,7 @@ enum AttentionTracking {
         helperDict: inout HelperDict,
         minimumViewingTime: TimeInterval,
         currentDate: Date = Date()
-    ) -> [Output]? {
+    ) -> [Output] {
             // put visible ids into Set for O(1) reading complexity
             let visibleIdsSet = Set(visibleIds)
 
@@ -58,7 +63,6 @@ enum AttentionTracking {
                 }
             }
 
-            // do not return empty array
-            return outputs.isEmpty ? nil : outputs
+            return outputs
         }
 }

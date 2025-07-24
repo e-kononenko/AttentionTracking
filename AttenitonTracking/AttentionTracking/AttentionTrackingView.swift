@@ -37,35 +37,26 @@ struct AttentionTrackingView: View {
                 Task {
                     for await outputModels in attentionTracker.outputSequence {
                         resultText = outputModels
-                            // mapping models to strings
-                            .map { outputModel in
-                                // simple formatting
-                                let viewingTimeString = String(format: "%.2f", outputModel.viewingTime)
-                                return "\(outputModel.id):\(viewingTimeString)"
-                            }
-                            // merge all strings into a single one
-                            .joined(separator: ", ")
+                            .map { String(describing: $0) }
+                            .joined(separator: "\n")
                     }
                 }
             })
-            .onPreferenceChange(
-                ItemFramePreferenceKey.self,
-                perform: { idFrames in
-                    // finding parent frame
-                    let parentFrame = parentGeometry.frame(in: .global)
+            .onPreferenceChange(ItemFramePreferenceKey.self, perform: { idFrames in
+                // finding parent frame
+                let parentFrame = parentGeometry.frame(in: .global)
 
-                    // mapping [Int : CGRect] dictionary into [Int] array of visible ids
-                    let visibleIds: [Int] = idFrames.compactMap { keyValue in
-                        return VisibilityHelper
-                            .isChildVisible(
-                                childFrame: keyValue.value,
-                                inParentFrame: parentFrame,
-                                visibilityThreshold: 0.7
-                            ) ? keyValue.key : nil
-                    }
-                    attentionTracker
-                        .trackVisibleIds(visibleIds)
-                })
+                // mapping [Int : CGRect] dictionary into [Int] array of visible ids
+                let visibleIds: [Int] = idFrames.compactMap { keyValue in
+                    return VisibilityHelper.isChildVisible(
+                        childFrame: keyValue.value,
+                        inParentFrame: parentFrame,
+                        visibilityThreshold: 0.7
+                    ) ? keyValue.key : nil
+                }
+                attentionTracker
+                    .trackVisibleIds(visibleIds)
+            })
             .overlay(alignment: .top) {
                 ResultView(resultText: resultText)
             }
@@ -78,7 +69,7 @@ struct ItemView: View {
     var body: some View {
         Text("Item \(item.id)")
             .frame(maxWidth: .infinity)
-            .frame(height: 500)
+            .frame(height: 600)
             .background(Color.mint)
             .listRowInsets(.init())
             .overlay {
