@@ -20,8 +20,8 @@ extension AttentionTracking {
         private var cancellables: Set<AnyCancellable> = .init()
 
         enum Constants {
-            static let minimumViewingTime = 5.0
-            static let collectTime = 30.0
+            static let minimumViewingTime = 2.0
+            static let collectTime = 10.0
         }
 
         init() {
