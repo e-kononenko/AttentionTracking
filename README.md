@@ -10,9 +10,9 @@ Then we process visible items and understand, how long they were visible.
 
 If an item was visible longer than minimun viewing time, we add it to the result.
 
-Results are returned in batches with `Combine`.
+We use `Combine` to collect the results and return them in batches.
 
 The view consumes results as `AsyncSequence` and displays them at the overlay.
 
-https://github.com/user-attachments/assets/0b67d4e5-94ca-4124-b1ce-506e6251a347
 
+![Simulator Screen Recording - iPhone 16 Pro - 2025-07-24 at 19 58 10](https://github.com/user-attachments/assets/2abfab3f-1e56-4699-a480-3962a7ab0d00)
