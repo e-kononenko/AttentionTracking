@@ -19,9 +19,20 @@ struct ItemFramePreferenceKey: PreferenceKey {
 }
 
 struct AttentionTrackingView: View {
+    private enum Constants {
+        static let visibilityThreshold: CGFloat = 0.7
+        static let minimumViewingTime: TimeInterval = 2.0
+        static let collectTime: TimeInterval = 10.0
+    }
+
     @State private var items: [Item] = (0...100).map { Item(id: $0) }
-    @State private var attentionTracker: AttentionTracking.Tracker = .init()
     @State private var resultText: String = ""
+    // ids and dates when they were visible for the first and last time
+    @State private var helperDict = [Int: (Date, Date)]()
+
+    @State private var trackItemCollector = TrackItemCollector(
+        collectTime: Constants.collectTime
+    )
 
     var body: some View {
         GeometryReader { parentGeometry in
@@ -35,8 +46,8 @@ struct AttentionTrackingView: View {
             .ignoresSafeArea()
             .onAppear(perform: {
                 Task {
-                    for await outputModels in attentionTracker.outputSequence {
-                        resultText = outputModels
+                    for await trackItems in trackItemCollector.outputSequence {
+                        resultText = trackItems
                             .map { String(describing: $0) }
                             .joined(separator: "\n")
                     }
@@ -51,11 +62,17 @@ struct AttentionTrackingView: View {
                     return VisibilityHelper.isChildVisible(
                         childFrame: keyValue.value,
                         inParentFrame: parentFrame,
-                        visibilityThreshold: 0.7
+                        visibilityThreshold: Constants.visibilityThreshold
                     ) ? keyValue.key : nil
                 }
-                attentionTracker
-                    .trackVisibleIds(visibleIds)
+
+                let trackItems = AttentionTracking.getTrackItemsFromVisibleIds(
+                    visibleIds,
+                    helperDict: &helperDict,
+                    minimumViewingTime: Constants.minimumViewingTime
+                )
+
+                trackItemCollector.collectTrackItems(trackItems)
             })
             .overlay(alignment: .top) {
                 ResultView(resultText: resultText)
