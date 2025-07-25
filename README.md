@@ -1,6 +1,7 @@
-# AttentionTracking
+# AttentionTracking 
+The source code for my [article](https://medium.com/@ekononenko/tracking-user-attention-in-swiftui-lists-7cb2370bad6c).
 
-Mechanism that understands, what items in `SwiftUI` List are interesting to users, based on their viewing time. 
+Mechanism that understands, what items in `SwiftUI` List are interesting to users, based on their viewing time.
 
 We find visible cells with `GeometryReader` and custom `PreferenceKey`.
 
